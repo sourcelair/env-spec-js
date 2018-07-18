@@ -1,27 +1,25 @@
-const testEnv = 'DATABASE_URL\nADMIN_EMAIL\nDEBUG';
+const testEnv = 'DATABASE_URL\nADMIN_EMAIL\nDEBUG\n11';
 const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
 
 //function that checks if the env value is valid
 //value cannot start with a digit and must only contain alphanumeric characters or an underscore
-function checkValidationOfValues(envSpecString){
-  let envValues = envSpecString.split('\n');//split lines based on \n character
-  envValues = envValues.filter(element =>{
-    if(element.match(alphanumericThatDoesNotStartWithDigit)){//keep valid values
-      return element;
-    }
-  })
-  return envValues;
+const checkValidationOfValues = envSpecString =>{
+  let envValuesChecked = envSpecString.split('\n');//split lines based on \n character
+
+  return envValuesChecked = envValuesChecked.filter(element =>{
+    return element.match(alphanumericThatDoesNotStartWithDigit)//keep valid values
+  });
+
 }
 
 //function that returns the HTML code as a string
-function outputHTML(envValues){
-  let outputString = "";
-  envValues.forEach(element =>{
-    outputString += `<label for="env_spec_${element.toLowerCase()}">${element}</label>\n`;
-    outputString += `<input id="env_spec_${element.toLowerCase()}" name="${element.toLowerCase()}" />\n`;
-  })
-  return outputString
+const outputHTML = envValues =>{
+  //create HTML format
+  envValues = envValues.map(element =>`<label for="env_spec_${element.toLowerCase()}">${element}</label>\n<input id="env_spec_${element.toLowerCase()}" name="${element.toLowerCase()}" />\n`)
+  //return as string value
+  return envValues.join('');
 }
 
-let outputString = outputHTML(checkValidationOfValues(testEnv));
-console.log(outputString);
+
+let finalHTMLString = outputHTML(checkValidationOfValues(testEnv));
+console.log(finalHTMLString);

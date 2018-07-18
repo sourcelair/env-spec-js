@@ -13,7 +13,8 @@ const checkValidationOfValues = envSpecString =>{
 //function that returns the HTML code as a string
 const outputHTML = envValues =>{
   //create HTML format
-  envValues = envValues.map(element =>`<label for="env_spec_${element.toLowerCase()}">${element}</label>\n<input id="env_spec_${element.toLowerCase()}" name="${element.toLowerCase()}" />\n`)
+  envValues = envValues.map(element =>`<label for="env_spec_${element.toLowerCase()}">${element}</label>\n`
+  +`<input id="env_spec_${element.toLowerCase()}" name="${element.toLowerCase()}" />\n`)
   //return as string value
   return envValues.join('');
 }

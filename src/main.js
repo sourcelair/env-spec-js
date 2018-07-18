@@ -9,9 +9,7 @@ const checkValidationOfValues = envSpecString =>{
   return envValuesChecked = envValuesChecked.filter(element =>{
     return element.match(alphanumericThatDoesNotStartWithDigit)//keep valid values
   });
-
 }
-
 //function that returns the HTML code as a string
 const outputHTML = envValues =>{
   //create HTML format
@@ -19,7 +17,10 @@ const outputHTML = envValues =>{
   //return as string value
   return envValues.join('');
 }
+//calls functions for final output
+const envSpecToHTML = envSpec =>{
+  return outputHTML(checkValidationOfValues(testEnv));
+}
 
 
-let finalHTMLString = outputHTML(checkValidationOfValues(testEnv));
-console.log(finalHTMLString);
+console.log(envSpecToHTML(testEnv));

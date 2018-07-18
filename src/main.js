@@ -3,8 +3,8 @@ const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
 
 //PARSING
 let envValues = testEnv.split('\n');//split lines based on \n character
-if(envValues[envValues.length-1]==='\n'){delete(envValues[envValues.length-1])}
-envValues = envValues.filter(element =>{
+if(envValues[envValues.length-1]==='\n'){delete(envValues[envValues.length-1]);}
+envValues = envValues.filter(element =>{//keep valid values
   if(element.match(alphanumericThatDoesNotStartWithDigit)){
     return element;
   }

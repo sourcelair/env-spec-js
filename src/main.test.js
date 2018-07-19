@@ -7,7 +7,7 @@ test('String starting with number', () => {
   '<input id="env_spec_debug" name="debug" />\n');
 });
 
-test('String containing non alaphanumeric characters', () => {
+test('String containing wrong characters', () => {
   const testEnv2 = 'DATABASaaE_URL\nφφADMIN_EMAIL\nDEBUG\n';
   expect(envSpecToHTML(testEnv2)).toEqual(
   '<label for="env_spec_debug">DEBUG</label>\n'+

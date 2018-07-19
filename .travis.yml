@@ -1,5 +1,11 @@
-laguage: node_js
 node_js:
+  - "8"
   - "10"
+
+script:
+  - yarn test
+
+cache: yarn
+
 notifications:
   email: false

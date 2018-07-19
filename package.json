@@ -1,0 +1,17 @@
+{
+  "name": "env-spec",
+  "version": "1.0.0",
+  "description": "modify env files to HTML",
+  "main": "index.js",
+  "repository": "https://github.com/akanellop/env-spec-js.git",
+  "author": "Akanellop",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^23.4.1",
+    "prettier": "1.13.7"
+  },
+  "scripts": {
+    "test": "jest",
+    "format": "prettier --write src/*.js"
+  }
+}

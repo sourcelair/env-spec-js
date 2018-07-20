@@ -27,3 +27,18 @@ test("Valid input", () => {
       '<input id="env_spec_debug" name="debug" />\n'
   );
 });
+
+test("Wrong value type", () => {
+  const testEnv4 = "DATABASE_URL: notgood\nADMIN_EMAIL\nDEBUG :   text";
+  expect(envSpecToHTML(testEnv4)).toEqual(
+    '<label for="env_spec_admin_email">ADMIN_EMAIL</label>\n' +
+      '<input id="env_spec_admin_email" name="admin_email" />\n' +
+      '<label for="env_spec_debug">DEBUG</label>\n' +
+      '<input id="env_spec_debug" name="debug" />\n'
+  );
+});
+
+test("Multiple invalid fields", () => {
+  const testEnv3 = "DATABASE_URLαα: αα\nADMIN_EMAIL:\n1DEBUG";
+  expect(envSpecToHTML(testEnv3)).toEqual("");
+});

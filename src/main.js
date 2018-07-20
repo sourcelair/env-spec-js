@@ -5,7 +5,7 @@ const checkValidationOfValues = envSpecString => {
   const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
   let envValArray = parseVarFromVal(envSpecString.split("\n")); //split lines based on \n character and parse them
 
-  return envValArray = envValArray.filter( element =>{
+  return envValArray = envValArray.filter( element =>{ //check for valid variables AND values
     if(element[0].match(alphanumericThatDoesNotStartWithDigit)&&(validValues.includes(element[1]))){
       return element;
     }
@@ -16,17 +16,16 @@ const checkValidationOfValues = envSpecString => {
 const parseVarFromVal = envSpecAsArray => {
   let envArrayParsed = [];
   let parsPos = -1;
-  envSpecAsArray.forEach( element =>{
+  return envArrayParsed = envSpecAsArray.map( element =>{
     parsPos = element.indexOf(":");
     if(parsPos<0){
       parsPos=element.length
-      envArrayParsed.push([element.substring(0,parsPos).trim(),'default'])
+      return [element.substring(0,parsPos).trim(),'default'];
     }
     else{
-      envArrayParsed.push([element.substring(0,parsPos).trim(),element.substring(parsPos+1,).trim()])
+      return [element.substring(0,parsPos).trim(),element.substring(parsPos+1,).trim()];
     }
   })
-  return envArrayParsed;
 };
 
 

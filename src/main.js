@@ -31,7 +31,7 @@ const parseVarFromType = envSpecAsArray => {
       element = element.split(":");
       return [element[0].trim(),element[1].trim()];
     }
-    else{ //if untyped enviromental variable set default as text
+    else{ //if untyped environmental variable set default as text
       return [element.trim(),'text'];
     }
   })

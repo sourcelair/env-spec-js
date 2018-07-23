@@ -10,17 +10,17 @@ test("Valid input", () => {
   );
 });
 
-test("Invalid enviromental variable : starts with number", () => {
+test("Invalid environmental variable : starts with number", () => {
   const testEnv = "1DATABASE_URL\nADMIN_EMAIL:email";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
 
-test("Invalid enviromental variable : contains non alphanumeric characters", () => {
+test("Invalid environmental variable : contains non alphanumeric characters", () => {
   const testEnv = "DATABASE_URLαα\nADMIN_EMAIL:email";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
 
-test("Invalid enviromental variable : contains lowercase letters", () => {
+test("Invalid environmental variable : contains lowercase letters", () => {
   const testEnv = "database_url\nADMIN_EMAIL:email";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
@@ -30,7 +30,7 @@ test("Invalid type", () => {
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
 
-test("Untyped enviromental variable", () => {
+test("Untyped environmental variable", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email";
   expect(envSpecToHTML(testEnv)).toEqual(
     '<label for="env_spec_database_url">DATABASE_URL</label>\n' +

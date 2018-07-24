@@ -1,29 +1,46 @@
 const envSpecToHTML = require("./main.js");
 
-test("String starting with number", () => {
-  const testEnv1 = "\n1ADMIN_EMAIL\nDEBUG";
-  expect(envSpecToHTML(testEnv1)).toEqual(
-    '<label for="env_spec_debug">DEBUG</label>\n' +
-      '<input id="env_spec_debug" name="debug" />\n'
-  );
-});
-
-test("String containing wrong characters", () => {
-  const testEnv2 = "DATABASaaE_URL\nφφADMIN_EMAIL\nDEBUG\n";
-  expect(envSpecToHTML(testEnv2)).toEqual(
-    '<label for="env_spec_debug">DEBUG</label>\n' +
-      '<input id="env_spec_debug" name="debug" />\n'
-  );
-});
-
 test("Valid input", () => {
-  const testEnv3 = "DATABASE_URL\nADMIN_EMAIL\nDEBUG";
-  expect(envSpecToHTML(testEnv3)).toEqual(
+  const testEnv = "DATABASE_URL\nADMIN_EMAIL:email";
+  expect(envSpecToHTML(testEnv)).toEqual(
     '<label for="env_spec_database_url">DATABASE_URL</label>\n' +
-      '<input id="env_spec_database_url" name="database_url" />\n' +
+      '<input id="env_spec_database_url" name="database_url" type="text" />\n' +
       '<label for="env_spec_admin_email">ADMIN_EMAIL</label>\n' +
-      '<input id="env_spec_admin_email" name="admin_email" />\n' +
-      '<label for="env_spec_debug">DEBUG</label>\n' +
-      '<input id="env_spec_debug" name="debug" />\n'
+      '<input id="env_spec_admin_email" name="admin_email" type="email" />\n'
   );
+});
+
+test("Invalid environmental variable : starts with number", () => {
+  const testEnv = "1DATABASE_URL\nADMIN_EMAIL:email";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Invalid environmental variable : contains non alphanumeric characters", () => {
+  const testEnv = "DATABASE_URLαα\nADMIN_EMAIL:email";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Invalid environmental variable : contains lowercase letters", () => {
+  const testEnv = "database_url\nADMIN_EMAIL:email";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Invalid type", () => {
+  const testEnv = "\nADMIN_EMAIL: notgood";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Untyped environmental variable", () => {
+  const testEnv = "DATABASE_URL\nADMIN_EMAIL:email";
+  expect(envSpecToHTML(testEnv)).toEqual(
+    '<label for="env_spec_database_url">DATABASE_URL</label>\n' +
+      '<input id="env_spec_database_url" name="database_url" type="text" />\n' +
+      '<label for="env_spec_admin_email">ADMIN_EMAIL</label>\n' +
+      '<input id="env_spec_admin_email" name="admin_email" type="email" />\n'
+  );
+});
+
+test("Multiple invalid variables and types", () => {
+  const testEnv3 = "DATABASE_URLαα: αα\nADMIN_EMAIL:\n1DEBUG";
+  expect(envSpecToHTML(testEnv3)).toEqual("Error:Wrong Syntax");
 });

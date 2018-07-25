@@ -9,11 +9,17 @@
   "devDependencies": {
     "jest": "^23.4.1",
     "prettier": "^1.13.7",
-    "prettier-check": "^2.0.0"
+    "prettier-check": "^2.0.0",
+    "watchify": "^3.11.0"
   },
   "scripts": {
     "test": "jest",
     "lint": "prettier-check src/*.js",
-    "format": "prettier --write src/*.js"
+    "format": "prettier --write src/*.js",
+    "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
+    "start": "browser-sync start --server --watch --files 'dist/*' 'index.html'  --port $PORT"
+  },
+  "dependencies": {
+    "browser-sync": "^2.24.6"
   }
 }

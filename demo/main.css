@@ -1,0 +1,38 @@
+body {
+    background-color: #E4E4E5;
+}
+h1 {
+    color: black;
+}
+p {
+    margin-left: 80px;
+}
+
+button{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+
+div {
+    width: 500px;
+    margin-left: 80px;
+    margin-bottom: 20px;
+}
+
+input{
+  width: 200px;
+  margin-right: 290px;
+  border: 2px solid #4CAF50;
+}
+
+#finalOutput{
+  background-color: white;
+  border: 1px solid #B1B7BC;
+}

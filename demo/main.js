@@ -1,7 +1,7 @@
-function getHTML(){
-  console.log("asdadS");
-  var textarea = document.getElementById("inputArea");
-  var textarea2 = document.getElementById("outputArea");
-  outputArea.value =  envSpec(inputArea.value) ;
-  document.getElementById("finalOutput").innerHTML = envSpec(inputArea.value) ;
-}
+var button = document.getElementById("myButton");
+button.addEventListener("click",function getHTML(){
+  var textarea = document.getElementById("inputTextArea");
+  var textarea2 = document.getElementById("outputTextArea");
+  outputTextArea.value =  envSpec(inputTextArea.value) ;
+  document.getElementById("finalOutput").innerHTML = envSpec(inputTextArea.value) ;
+});

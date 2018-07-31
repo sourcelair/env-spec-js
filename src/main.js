@@ -18,7 +18,6 @@ const checkValidationOfValues = envSpecString => {
   const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
   let envValArray = parseVarFromType(envSpecString.trim().split("\n")); //split lines based on \n character and parse them
   let checkValidation = true;
-
   //envValArray is a two-dimensional array containing only the types and variables
   //element[0] is the variable e.g. ADMIN_EMAIL
   //element[1] is the type e.g. test
@@ -80,5 +79,4 @@ const outputHTML = envValues => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-
 module.exports = envSpecToHTML;

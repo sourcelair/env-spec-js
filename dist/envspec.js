@@ -1,3 +1,4 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.envSpec = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 //function that checks if the env value is valid
 //value cannot start with a digit and must only contain alphanumeric characters or an underscore
 const checkValidationOfValues = envSpecString => {
@@ -22,23 +23,11 @@ const checkValidationOfValues = envSpecString => {
   //element[0] is the variable e.g. ADMIN_EMAIL
   //element[1] is the type e.g. test
   envValArray = envValArray.filter(element => {
-    //check for valid variables AND types or restricted choices
+    //check for valid variables AND types
     if (
       element[0].match(alphanumericThatDoesNotStartWithDigit) &&
       validTypes.includes(element[1])
     ) {
-      //in case value has valid type
-      element[2] = 0; //0 constant that declares what should be printed for an element with type
-      return element;
-    }
-    // in case value has restricted choices (indicated by "[]" ,we should split them
-    else if (
-      element[0].match(alphanumericThatDoesNotStartWithDigit) &&
-      element[1][0] === "[" &&
-      element[1][element[1].length - 1] === "]"
-    ) {
-      element[1] = element[1].substring(1, element[1].length - 1).split(",");
-      element[2] = 1; //1 constant that declares what should be printed for an element with restricted choices
       return element;
     } else {
       checkValidation = false;
@@ -71,35 +60,15 @@ const parseVarFromType = envSpecAsArray => {
 const outputHTML = envValues => {
   //create HTML format
   if (envValues) {
-    envValues = envValues.map(element => {
-      switch (element[2]) {
-        case 0: //if element is value with type
-          toPrint =
-            `<label for="env_spec_${element[0].toLowerCase()}">${
-              element[0]
-            }</label>\n` +
-            `<input id="env_spec_${element[0].toLowerCase()}" name="${element[0].toLowerCase()}" type="${
-              element[1]
-            }" />\n`;
-          return toPrint;
-
-        case 1:
-          //if element is value with restricted choices
-          toPrint =
-            `<label for="env_spec_admin_${element[0].toLowerCase()}">${
-              element[0]
-            }</label>\n` +
-            `<select id="env_spec_admin_${element[0].toLowerCase()}" name="admin_${element[0].toLowerCase()}">\n`;
-          for (let i = 0; i < element[1].length; i++) {
-            //print text for every option
-            toPrint =
-              toPrint +
-              `  <option value="${element[1][i]}">${element[1][i]}</option>\n`;
-          }
-          toPrint += `</select>\n`;
-          return toPrint;
-      }
-    });
+    envValues = envValues.map(
+      element =>
+        `<label for="env_spec_${element[0].toLowerCase()}">${
+          element[0]
+        }</label>\n` +
+        `<input id="env_spec_${element[0].toLowerCase()}" name="${element[0].toLowerCase()}" type="${
+          element[1]
+        }" />\n`
+    );
     //return as string value
     return envValues.join("");
   }
@@ -111,5 +80,7 @@ const outputHTML = envValues => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-
 module.exports = envSpecToHTML;
+
+},{}]},{},[1])(1)
+});

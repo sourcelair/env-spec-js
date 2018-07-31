@@ -22,11 +22,23 @@ const checkValidationOfValues = envSpecString => {
   //element[0] is the variable e.g. ADMIN_EMAIL
   //element[1] is the type e.g. test
   envValArray = envValArray.filter(element => {
-    //check for valid variables AND types
+    //check for valid variables AND types or restricted choices
     if (
       element[0].match(alphanumericThatDoesNotStartWithDigit) &&
       validTypes.includes(element[1])
     ) {
+      //in case value has valid type
+      element[2] = 0; //0 constant that declares what should be printed for an element with type
+      return element;
+    }
+    // in case value has restricted choices (indicated by "[]" ,we should split them
+    else if (
+      element[0].match(alphanumericThatDoesNotStartWithDigit) &&
+      element[1][0] === "[" &&
+      element[1][element[1].length - 1] === "]"
+    ) {
+      element[1] = element[1].substring(1, element[1].length - 1).split(",");
+      element[2] = 1; //1 constant that declares what should be printed for an element with restricted choices
       return element;
     } else {
       checkValidation = false;
@@ -59,15 +71,35 @@ const parseVarFromType = envSpecAsArray => {
 const outputHTML = envValues => {
   //create HTML format
   if (envValues) {
-    envValues = envValues.map(
-      element =>
-        `<label for="env_spec_${element[0].toLowerCase()}">${
-          element[0]
-        }</label>\n` +
-        `<input id="env_spec_${element[0].toLowerCase()}" name="${element[0].toLowerCase()}" type="${
-          element[1]
-        }" />\n`
-    );
+    envValues = envValues.map(element => {
+      switch (element[2]) {
+        case 0: //if element is value with type
+          toPrint =
+            `<label for="env_spec_${element[0].toLowerCase()}">${
+              element[0]
+            }</label>\n` +
+            `<input id="env_spec_${element[0].toLowerCase()}" name="${element[0].toLowerCase()}" type="${
+              element[1]
+            }" />\n`;
+          return toPrint;
+
+        case 1:
+          //if element is value with restricted choices
+          toPrint =
+            `<label for="env_spec_admin_${element[0].toLowerCase()}">${
+              element[0]
+            }</label>\n` +
+            `<select id="env_spec_admin_${element[0].toLowerCase()}" name="admin_${element[0].toLowerCase()}">\n`;
+          for (let i = 0; i < element[1].length; i++) {
+            //print text for every option
+            toPrint =
+              toPrint +
+              `  <option value="${element[1][i]}">${element[1][i]}</option>\n`;
+          }
+          toPrint += `</select>\n`;
+          return toPrint;
+      }
+    });
     //return as string value
     return envValues.join("");
   }
@@ -79,4 +111,5 @@ const outputHTML = envValues => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
+console.log(envSpecToHTML("VASAA : email"));
 module.exports = envSpecToHTML;

@@ -111,5 +111,5 @@ const outputHTML = envValues => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-console.log(envSpecToHTML("VASAA : email"));
+
 module.exports = envSpecToHTML;

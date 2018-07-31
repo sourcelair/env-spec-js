@@ -19,6 +19,11 @@ div {
     margin-bottom: 20px;
 }
 
+input {
+  margin-right: 500px;
+  margin-bottom: 5px;
+}
+
 #finalOutput{
   background-color: white;
   border: 1px solid #B1B7BC;

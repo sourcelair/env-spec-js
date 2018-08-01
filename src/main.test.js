@@ -58,7 +58,7 @@ test("Multiple invalid variables and types", () => {
   expect(envSpecToHTML(testEnv3)).toEqual("Error:Wrong Syntax");
 });
 
-test("Wronf Syntax for restricted choices", () => {
+test("Wrong Syntax for restricted choices", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA:[0,";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });

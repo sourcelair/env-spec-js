@@ -16,29 +16,32 @@ const checkValidationOfValues = envSpecString => {
     "week"
   ];
   const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
+  const genericForCheckingRestrChoicesSyntax = /^\[(.*)\]$/;
   let envValArray = parseVarFromType(envSpecString.trim().split("\n")); //split lines based on \n character and parse them
   let checkValidation = true;
   //envValArray is a two-dimensional array containing only the types and variables
   //element[0] is the variable e.g. ADMIN_EMAIL
   //element[1] is the type e.g. test
-  envValArray = envValArray.filter(element => {
+  //element[2] will be what this environmental variable contains e.g. as default or as options
+  envValArray = envValArray.map(element => {
     //check for valid variables AND types or restricted choices
     if (
       element[0].match(alphanumericThatDoesNotStartWithDigit) &&
       validTypes.includes(element[1])
     ) {
       //in case value has valid type
-      element[2] = 0; //0 constant that declares what should be printed for an element with type
+      element[2] = "hasType"; //'hasType' constant that declares what should be printed for an element with type
       return element;
     }
     // in case value has restricted choices (indicated by "[]" ,we should split them
     else if (
       element[0].match(alphanumericThatDoesNotStartWithDigit) &&
-      element[1][0] === "[" &&
-      element[1][element[1].length - 1] === "]"
+      element[1].match(genericForCheckingRestrChoicesSyntax)
     ) {
-      element[1] = element[1].substring(1, element[1].length - 1).split(",");
-      element[2] = 1; //1 constant that declares what should be printed for an element with restricted choices
+      element[1] = element[1]
+        .match(genericForCheckingRestrChoicesSyntax)[1]
+        .split(",");
+      element[2] = "hasResChoices"; //'hasResChoices' constant that declares what should be printed for an element with restricted choices
       return element;
     } else {
       checkValidation = false;
@@ -73,7 +76,7 @@ const outputHTML = envValues => {
   if (envValues) {
     envValues = envValues.map(element => {
       switch (element[2]) {
-        case 0: //if element is value with type
+        case "hasType": //if element is value with type
           toPrint =
             `<label for="env_spec_${element[0].toLowerCase()}">${
               element[0]
@@ -83,7 +86,7 @@ const outputHTML = envValues => {
             }" />\n`;
           return toPrint;
 
-        case 1:
+        case "hasResChoices":
           //if element is value with restricted choices
           toPrint =
             `<label for="env_spec_admin_${element[0].toLowerCase()}">${
@@ -111,5 +114,5 @@ const outputHTML = envValues => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-console.log(envSpecToHTML("VASAA : email"));
+
 module.exports = envSpecToHTML;

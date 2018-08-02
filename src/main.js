@@ -128,5 +128,5 @@ const outputHTML = envSpecEntriesArray => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-console.log(envSpecToHTML("DATA\nDATA2:text\nDATA3:[3,3"));
+
 module.exports = envSpecToHTML;

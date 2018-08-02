@@ -105,13 +105,11 @@ const outputHTML = envSpecEntriesArray => {
       } else if (element.choices) {
         //if element is value with restricted choices
         toPrint += `<select id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}">\n`;
-        for (let i = 0; i < element.choices.length; i++) {
+
+        for (choice of element.choices) {
           //print text for every option
           toPrint =
-            toPrint +
-            `  <option value="${element.choices[i]}">${
-              element.choices[i]
-            }</option>\n`;
+            toPrint + `  <option value="${choice}">${choice}</option>\n`;
         }
         toPrint += `</select>\n`;
         return toPrint;

@@ -23,6 +23,14 @@ test("Valid input with restricted choices", () => {
   );
 });
 
+test("Valid input with default value", () => {
+  const testEnv = "DATABASE_URL: email = test@mail.com";
+  expect(envSpecToHTML(testEnv)).toEqual(
+    `<label for="env_spec_database_url">DATABASE_URL</label>\n` +
+      `<input id="env_spec_database_url" name="database_url" type=""email" value="test@mail.com" />\n`
+  );
+});
+
 test("Invalid environmental variable : starts with number", () => {
   const testEnv = "1DATABASE_URL\nADMIN_EMAIL:email";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
@@ -60,5 +68,10 @@ test("Multiple invalid variables and types", () => {
 
 test("Wrong Syntax for restricted choices", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA:[0,";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Wrong Syntax for default value", () => {
+  const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA: text dasdsa";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });

@@ -15,8 +15,8 @@ test("Valid input with restricted choices", () => {
   expect(envSpecToHTML(testEnv)).toEqual(
     '<label for="env_spec_database_url">DATABASE_URL</label>\n' +
       '<input id="env_spec_database_url" name="database_url" type="text" />\n' +
-      `<label for="env_spec_admin_number">NUMBER</label>\n` +
-      `<select id="env_spec_admin_number" name="admin_number">\n` +
+      `<label for="env_spec_number">NUMBER</label>\n` +
+      `<select id="env_spec_number" name="number">\n` +
       `  <option value="0">0</option>\n` +
       `  <option value="1">1</option>\n` +
       `</select>\n`

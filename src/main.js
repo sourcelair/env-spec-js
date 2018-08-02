@@ -58,6 +58,16 @@ const checkValidationOfValues = envSpecString => {
   }
 };
 
+//function that creates entries
+const newEntry = (envName, envType, envChoices, envDefaultVal) => {
+  return (entry = {
+    name: envName,
+    type: envType,
+    choices: envChoices,
+    defaultValue: envDefaultVal
+  });
+};
+
 //function that separates the variables from their types and returns them as an array
 const parseVarFromType = envSpecAsArray => {
   return (envSpecAsArrayParsed = envSpecAsArray.map(element => {
@@ -67,32 +77,19 @@ const parseVarFromType = envSpecAsArray => {
       //if there is a default value indicated by an existing "="
       if (element[1].includes("=")) {
         element[1] = element[1].split("=");
-        let entry = {
-          name: element[0].trim(),
-          type: element[1][0].trim(),
-          choices: null,
-          defaultVal: element[1][1].trim()
-        };
-        return entry;
+        return newEntry(
+          element[0].trim(),
+          element[1][0].trim(),
+          null,
+          element[1][1].trim()
+        );
       }
       //else if there is just a type
-      let entry = {
-        name: element[0].trim(),
-        type: element[1].trim(),
-        choices: null,
-        defaultVal: null
-      };
-      return entry;
+      return newEntry(element[0].trim(), element[1].trim(), null, null);
     }
     //in case of untyped variable , give default type
     else {
-      let entry = {
-        name: element.trim(),
-        type: "text",
-        choices: null,
-        default: null
-      };
-      return entry;
+      return newEntry(element.trim(), "text", null, null);
     }
   }));
 };
@@ -110,18 +107,15 @@ const outputHTML = envSpecEntriesArray => {
   if (envSpecEntriesArray) {
     envSpecEntriesToPrint = envSpecEntriesArray.map(element => {
       toPrint = renderLabelForEntry(element.name);
-      //if element has default value
-      if (element.defaultVal) {
+      //if element has valid type
+      if (element.type) {
         toPrint +=
           `<input id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}"` +
-          ` type=""${element.type}" value="${element.defaultVal}" />\n`;
-        return toPrint;
-      }
-      //if element has valid type
-      else if (element.type) {
-        toPrint += `<input id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}" type="${
-          element.type
-        }" />\n`;
+          ` type="${element.type}"`;
+        if (element.defaultValue) {
+          toPrint += ` value="${element.defaultValue}"`;
+        }
+        toPrint += ` />\n`;
         return toPrint;
       } else if (element.choices) {
         //if element is value with restricted choices

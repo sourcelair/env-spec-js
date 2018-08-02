@@ -27,7 +27,7 @@ test("Valid input with default value", () => {
   const testEnv = "DATABASE_URL: email = test@mail.com";
   expect(envSpecToHTML(testEnv)).toEqual(
     `<label for="env_spec_database_url">DATABASE_URL</label>\n` +
-      `<input id="env_spec_database_url" name="database_url" type=""email" value="test@mail.com" />\n`
+      `<input id="env_spec_database_url" name="database_url" type="email" value="test@mail.com" />\n`
   );
 });
 

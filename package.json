@@ -1,6 +1,6 @@
 {
   "name": "env-spec",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "modify env files to HTML",
   "main": "index.js",
   "repository": "https://github.com/sourcelair/env-spec-js.git",
@@ -20,6 +20,5 @@
     "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
     "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

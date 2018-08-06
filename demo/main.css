@@ -1,22 +1,22 @@
 body {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
-button{
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 10px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+button {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 div {
-    width: 500px;
-    margin-left: 80px;
-    margin-bottom: 20px;
+  width: 500px;
+  margin-left: 80px;
+  margin-bottom: 20px;
 }
 
 input {
@@ -24,7 +24,7 @@ input {
   margin-bottom: 5px;
 }
 
-#finalOutput{
+#finalOutput {
   background-color: white;
-  border: 1px solid #B1B7BC;
+  border: 1px solid #b1b7bc;
 }

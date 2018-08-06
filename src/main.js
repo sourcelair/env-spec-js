@@ -58,15 +58,15 @@ const checkValidationOfValues = envSpecString => {
   }
 };
 
-//function that creates entries
-const newEntry = (envName, envType, envChoices, envDefaultVal) => {
-  return (entry = {
-    name: envName,
-    type: envType,
-    choices: envChoices,
-    defaultValue: envDefaultVal
-  });
-};
+//class that creates entries
+class Entry {
+  constructor(envName, envType, envChoices, envDefaultVal) {
+    this.name = envName;
+    this.type = envType;
+    this.choices = envChoices;
+    this.defaultValue = envDefaultVal;
+  }
+}
 
 //function that separates the variables from their types and returns them as an array
 const parseVarFromType = envSpecAsArray => {
@@ -77,7 +77,7 @@ const parseVarFromType = envSpecAsArray => {
       //if there is a default value indicated by an existing "="
       if (element[1].includes("=")) {
         element[1] = element[1].split("=");
-        return newEntry(
+        return new Entry(
           element[0].trim(),
           element[1][0].trim(),
           null,
@@ -85,11 +85,11 @@ const parseVarFromType = envSpecAsArray => {
         );
       }
       //else if there is just a type
-      return newEntry(element[0].trim(), element[1].trim(), null, null);
+      return new Entry(element[0].trim(), element[1].trim(), null, null);
     }
     //in case of untyped variable , give default type
     else {
-      return newEntry(element.trim(), "text", null, null);
+      return new Entry(element.trim(), "text", null, null);
     }
   }));
 };

@@ -15,11 +15,10 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "prettier-check src/*.js",
-    "format": "prettier --write src/*.js",
+    "lint": "prettier-check */*.{js,css}",
+    "format": "prettier --write */*.{js,css}",
     "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
     "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

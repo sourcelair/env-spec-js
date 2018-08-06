@@ -18,7 +18,10 @@
     "lint": "prettier-check {demo,src}/*.{js,css}",
     "format": "prettier --write {demo,src}/*.{js,css}",
     "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
-    "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT"
+    "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT",
+    "doc": "jsdoc src/main.js -d docs"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jsdoc": "^3.5.5"
+  }
 }

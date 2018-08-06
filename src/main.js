@@ -1,6 +1,12 @@
-//function that checks if each env entry is valid
-//environmental variable of entry cannot start with a digit and must only contain alphanumeric characters or an underscore
-//type of entry must be valid
+/** @method checkValidationOfValues
+ * @summary Checks if each env entry of .env file is valid.
+ * @description Environmental variable name of entry cannot start with a digit and must only contain alphanumeric characters or an underscore.
+ *  Type of entry must be valid or null.
+ *  Restricted choices and default values of entry have specific syntax or are null.
+ *  Uses parsing function {@link parseVarFromType} to get entries.
+ * @param {string} envSpecString the whole .env file as a string
+ * @returns {Array|null} The array of all valid entries  or null if something was invalid.
+ */
 const checkValidationOfValues = envSpecString => {
   const validTypes = [
     "color",
@@ -25,6 +31,7 @@ const checkValidationOfValues = envSpecString => {
   //element.name is the variable e.g. ADMIN_EMAIL
   //element.type is the type e.g. test or null
   //element.choices will contain the given options or null
+  //element.defaultValue is the default Value if there was a given one
   envSpecEntries = envSpecLines.map(element => {
     if (
       //in case environmental variable is valid and entry has a valid type
@@ -58,8 +65,17 @@ const checkValidationOfValues = envSpecString => {
   }
 };
 
-//class that creates entries
+/**
+ * Class representing an Entry
+ * @class
+ */
 class Entry {
+  /**
+   * @param {string} envName environmental variable e.g. DATABASE_URL
+   *@param {string|null} envType type of variable e.g. url
+   *@param {Array|null} envChoices given restricted choices e.g. [data,info,1]
+   *@param {string|null} envDefaultVal given default value e.g. data
+   */
   constructor(envName, envType, envChoices, envDefaultVal) {
     this.name = envName;
     this.type = envType;
@@ -68,7 +84,12 @@ class Entry {
   }
 }
 
-//function that separates the variables from their types and returns them as an array
+/** @function parseVarFromType
+ * @summary Separates the variables' name from their types, their restricted choices and their default values and returns them as an array of {@link Entry} objects.
+ * @desc Parses each line according to existing symbols such as : or = and create an entry object for each line.If a feature do not exist,its field will be null.
+ * @param {Array} envSpecAsArray  array with the slpitted lines of the .env file based on the \n symbol
+ * @returns {Array} An array containing entry objects.
+ */
 const parseVarFromType = envSpecAsArray => {
   return (envSpecAsArrayParsed = envSpecAsArray.map(element => {
     //in case of typed variable or given restricted choices
@@ -94,13 +115,21 @@ const parseVarFromType = envSpecAsArray => {
   }));
 };
 
-//function that creates the render label for the output outputHTML
+/** @function renderLabelForEntry
+ * @desc Creates the render label for the {@link outputHTML} function.
+ * @param {string} name the given environmental variable name
+ * @returns {string}
+ */
 const renderLabelForEntry = name => {
   return (labelToPrint = `<label for="env_spec_${name.toLowerCase()}">${name}</label>\n`);
 };
 
-//function that returns the HTML code as a string
-//envSpecEntriesArray is an array containing entries with their variable name and its type or restricted choices
+/** @function outputHTML
+ * @summary Renders an {@link Entry} object array to HTML code as a string.
+ * @desc Checks which attributes of the object are null and which they are not , so the proper message is rendered.
+ * @param {Array|null} envSpecEntriesArray is an array containing entry objects
+ * @returns {string}
+ */
 const outputHTML = envSpecEntriesArray => {
   //create HTML format if there is not a syntax error
   //in case of syntax error envSpecEntriesArray is null
@@ -136,7 +165,11 @@ const outputHTML = envSpecEntriesArray => {
   return "Error:Wrong Syntax";
 };
 
-//function for final output
+/** @function envSpecToHTML
+ * @desc gives final output using {@link outputHTML} and {@link checkValidationOfValues}
+ * @param {string} envSpec the .env file given in string format
+ * @returns {string} HTML code
+ */
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };

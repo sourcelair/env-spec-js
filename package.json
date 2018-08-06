@@ -20,5 +20,6 @@
     "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
     "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

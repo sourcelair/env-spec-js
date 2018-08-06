@@ -58,27 +58,38 @@ const checkValidationOfValues = envSpecString => {
   }
 };
 
+//class that creates entries
+class Entry {
+  constructor(envName, envType, envChoices, envDefaultVal) {
+    this.name = envName;
+    this.type = envType;
+    this.choices = envChoices;
+    this.defaultValue = envDefaultVal;
+  }
+}
+
 //function that separates the variables from their types and returns them as an array
 const parseVarFromType = envSpecAsArray => {
   return (envSpecAsArrayParsed = envSpecAsArray.map(element => {
     //in case of typed variable or given restricted choices
     if (element.includes(":")) {
       element = element.split(":");
-      let entry = {
-        name: element[0].trim(),
-        type: element[1].trim(),
-        choices: null
-      };
-      return entry;
+      //if there is a default value indicated by an existing "="
+      if (element[1].includes("=")) {
+        element[1] = element[1].split("=");
+        return new Entry(
+          element[0].trim(),
+          element[1][0].trim(),
+          null,
+          element[1][1].trim()
+        );
+      }
+      //else if there is just a type
+      return new Entry(element[0].trim(), element[1].trim(), null, null);
     }
     //in case of untyped variable , give default type
     else {
-      let entry = {
-        name: element.trim(),
-        type: "text",
-        choices: null
-      };
-      return entry;
+      return new Entry(element.trim(), "text", null, null);
     }
   }));
 };
@@ -98,14 +109,17 @@ const outputHTML = envSpecEntriesArray => {
       toPrint = renderLabelForEntry(element.name);
       //if element has valid type
       if (element.type) {
-        toPrint += `<input id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}" type="${
-          element.type
-        }" />\n`;
+        toPrint +=
+          `<input id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}"` +
+          ` type="${element.type}"`;
+        if (element.defaultValue) {
+          toPrint += ` value="${element.defaultValue}"`;
+        }
+        toPrint += ` />\n`;
         return toPrint;
       } else if (element.choices) {
         //if element is value with restricted choices
         toPrint += `<select id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}">\n`;
-
         for (choice of element.choices) {
           //print text for every option
           toPrint =

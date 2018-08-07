@@ -82,6 +82,11 @@ test("Wrong Syntax for restricted choices", () => {
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
 
+test("Wrong Syntax for restricted choices2", () => {
+  const testEnv = "DEBUG: [0, ]";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
 test("Wrong Syntax for default value for type", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA: text dasdsa";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
@@ -89,5 +94,10 @@ test("Wrong Syntax for default value for type", () => {
 
 test("Wrong Syntax for default value for type", () => {
   const testEnv = "DEBUG: [0, 1]=4";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Wrong Syntax for default value,missing value", () => {
+  const testEnv = "DEBUG: [0, 1]=";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });

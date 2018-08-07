@@ -33,35 +33,46 @@ const checkValidationOfValues = envSpecString => {
   //element.choices will contain the given options or null
   //element.defaultValue is the default Value if there was a given one
   envSpecEntries = envSpecLines.map(element => {
-
-    if (
-      //in case environmental variable is valid and entry has a valid type
-      element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-      validTypes.includes(element.type)
-    ) {
-      return element;
-    }
-    //in case environmental variable is valid and entry has restricted choices (indicated by "[]" ,we should split them
-    else if (
-      element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-      element.type.match(genericForCheckingRestrChoicesSyntax)
-    ) {
-      element.choices = element.type
-        .match(genericForCheckingRestrChoicesSyntax)[1]
-        .split(",");
-      element.choices = element.choices.map (choice =>{
-        return choice.trim();
-      })
-      element.type = null;
-      //if there is a default value, check if it is valid
-      if(element.defaultValue && !(element.choices.includes(element.defaultValue))){
+    if (element.defaultValue === "") {
+      //this would happen in case input is "DATA: number = " or "DATA :[4,2] = "
+      checkValidation = false;
+    } else {
+      if (
+        //in case environmental variable is valid and entry has a valid type
+        element.name.match(alphanumericThatDoesNotStartWithDigit) &&
+        validTypes.includes(element.type)
+      ) {
+        return element;
+      }
+      //in case environmental variable is valid and entry has restricted choices (indicated by "[]" ,we should split them
+      else if (
+        element.name.match(alphanumericThatDoesNotStartWithDigit) &&
+        element.type.match(genericForCheckingRestrChoicesSyntax)
+      ) {
+        element.choices = element.type
+          .match(genericForCheckingRestrChoicesSyntax)[1]
+          .split(",");
+        element.choices = element.choices.map(choice => {
+          if (choice.trim() === "") {
+            //check for wrong syntax "DATA: [1, ]"
+            checkValidation = false;
+          }
+          return choice.trim(); //trim valid choices
+        });
+        element.type = null;
+        //if there is a default value, check if it is valid
+        if (
+          element.defaultValue &&
+          !element.choices.includes(element.defaultValue)
+        ) {
+          checkValidation = false;
+        }
+        return element;
+      }
+      //in case of a syntax error in any cases of the above
+      else {
         checkValidation = false;
       }
-      return element;
-    }
-    //in case of a syntax error in any cases of the above
-    else {
-      checkValidation = false;
     }
   });
 
@@ -159,12 +170,14 @@ const outputHTML = envSpecEntriesArray => {
         toPrint += `<select id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}">\n`;
         for (choice of element.choices) {
           //print text for every option
-          if(choice === element.defaultValue){//in case defaultValue was given
+          if (choice === element.defaultValue) {
+            //in case defaultValue was given
             toPrint =
-            toPrint + `  <option value="${choice}" selected>${choice}</option>\n`;
-          }else{
+              toPrint +
+              `  <option value="${choice}" selected>${choice}</option>\n`;
+          } else {
             toPrint =
-            toPrint + `  <option value="${choice}">${choice}</option>\n`;
+              toPrint + `  <option value="${choice}">${choice}</option>\n`;
           }
         }
         toPrint += `</select>\n`;

@@ -33,6 +33,7 @@ const checkValidationOfValues = envSpecString => {
   //element.choices will contain the given options or null
   //element.defaultValue is the default Value if there was a given one
   envSpecEntries = envSpecLines.map(element => {
+
     if (
       //in case environmental variable is valid and entry has a valid type
       element.name.match(alphanumericThatDoesNotStartWithDigit) &&
@@ -48,7 +49,14 @@ const checkValidationOfValues = envSpecString => {
       element.choices = element.type
         .match(genericForCheckingRestrChoicesSyntax)[1]
         .split(",");
+      element.choices = element.choices.map (choice =>{
+        return choice.trim();
+      })
       element.type = null;
+      //if there is a default value, check if it is valid
+      if(element.defaultValue && !(element.choices.includes(element.defaultValue))){
+        checkValidation = false;
+      }
       return element;
     }
     //in case of a syntax error in any cases of the above
@@ -151,10 +159,16 @@ const outputHTML = envSpecEntriesArray => {
         toPrint += `<select id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}">\n`;
         for (choice of element.choices) {
           //print text for every option
-          toPrint =
+          if(choice === element.defaultValue){//in case defaultValue was given
+            toPrint =
+            toPrint + `  <option value="${choice}" selected>${choice}</option>\n`;
+          }else{
+            toPrint =
             toPrint + `  <option value="${choice}">${choice}</option>\n`;
+          }
         }
         toPrint += `</select>\n`;
+
         return toPrint;
       }
     });

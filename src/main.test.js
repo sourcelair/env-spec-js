@@ -23,7 +23,18 @@ test("Valid input with restricted choices", () => {
   );
 });
 
-test("Valid input with default value", () => {
+test("Valid input with default value for type", () => {
+  const testEnv = "DEBUG: [0, 1]=1";
+  expect(envSpecToHTML(testEnv)).toEqual(
+    `<label for="env_spec_debug">DEBUG</label>\n` +
+      `<select id="env_spec_debug" name="debug">\n` +
+      `  <option value="0">0</option>\n` +
+      `  <option value="1" selected>1</option>\n` +
+      `</select>\n`
+  );
+});
+
+test("Valid input with default value for restricted choices", () => {
   const testEnv = "DATABASE_URL: email = test@mail.com";
   expect(envSpecToHTML(testEnv)).toEqual(
     `<label for="env_spec_database_url">DATABASE_URL</label>\n` +
@@ -71,7 +82,12 @@ test("Wrong Syntax for restricted choices", () => {
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });
 
-test("Wrong Syntax for default value", () => {
+test("Wrong Syntax for default value for type", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA: text dasdsa";
+  expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
+});
+
+test("Wrong Syntax for default value for type", () => {
+  const testEnv = "DEBUG: [0, 1]=4";
   expect(envSpecToHTML(testEnv)).toEqual("Error:Wrong Syntax");
 });

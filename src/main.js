@@ -116,7 +116,7 @@ const parseVarFromType = envSpecAsArray => {
 };
 
 /** @function renderLabelForEntry
- * @desc Creates the render label for the {@link outputHTML} function.
+ * @desc Creates the render for the {@link outputHTML} function.
  * @param {string} name the given environmental variable name
  * @returns {string}
  */

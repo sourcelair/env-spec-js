@@ -11,7 +11,8 @@
     "jest": "^23.4.1",
     "prettier": "^1.13.7",
     "prettier-check": "^2.0.0",
-    "watchify": "^3.11.0"
+    "watchify": "^3.11.0",
+    "jsdoc": "^3.5.5"
   },
   "scripts": {
     "test": "jest",
@@ -19,9 +20,8 @@
     "format": "prettier --write {demo,src}/*.{js,css}",
     "watch": "watchify src/main.js --verbose --standalone envSpec -o dist/envspec.js",
     "start": "browser-sync start --server demo --server dist --watch --files 'dist/*' 'demo/*'  --port $PORT",
-    "doc": "jsdoc src/main.js -d docs"
+    "docs": "jsdoc src/main.js -d docs"
   },
   "dependencies": {
-    "jsdoc": "^3.5.5"
   }
 }

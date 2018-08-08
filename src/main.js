@@ -40,14 +40,16 @@ const checkValidationOfValues = envSpecString => {
       if (
         //in case environmental variable is valid and entry has a valid type
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        validTypes.includes(element.type)
+        validTypes.includes(element.type) &&
+        checkValidation === true
       ) {
         return element;
       }
       //in case environmental variable is valid and entry has restricted choices (indicated by "[]" ,we should split them
       else if (
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        element.type.match(genericForCheckingRestrChoicesSyntax)
+        element.type.match(genericForCheckingRestrChoicesSyntax) &&
+        checkValidation === true
       ) {
         element.choices = element.type
           .match(genericForCheckingRestrChoicesSyntax)[1]

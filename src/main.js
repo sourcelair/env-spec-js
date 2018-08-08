@@ -40,14 +40,16 @@ const checkValidationOfValues = envSpecString => {
       if (
         //in case environmental variable is valid and entry has a valid type
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        validTypes.includes(element.type)
+        validTypes.includes(element.type) &&
+        checkValidation === true
       ) {
         return element;
       }
       //in case environmental variable is valid and entry has restricted choices (indicated by "[]" ,we should split them
       else if (
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        element.type.match(genericForCheckingRestrChoicesSyntax)
+        element.type.match(genericForCheckingRestrChoicesSyntax) &&
+        checkValidation === true
       ) {
         element.choices = element.type
           .match(genericForCheckingRestrChoicesSyntax)[1]
@@ -90,16 +92,18 @@ const checkValidationOfValues = envSpecString => {
  */
 class Entry {
   /**
-   * @param {string} envName environmental variable e.g. DATABASE_URL
-   *@param {string|null} envType type of variable e.g. url
-   *@param {Array|null} envChoices given restricted choices e.g. [data,info,1]
-   *@param {string|null} envDefaultVal given default value e.g. data
+   * @param {string} name environmental variable e.g. DATABASE_URL
+   *@param {string|null} type type of variable e.g. url
+   *@param {Array|null} choices given restricted choices e.g. [data,info,1]
+   *@param {string|null} defaultValue given default value e.g. data
+   *@param {string} comment given comment using the # symbol
    */
-  constructor(envName, envType, envChoices, envDefaultVal) {
-    this.name = envName;
-    this.type = envType;
-    this.choices = envChoices;
-    this.defaultValue = envDefaultVal;
+  constructor(name, type, choices, defaultValue, comment) {
+    this.name = name;
+    this.type = type;
+    this.choices = choices;
+    this.defaultValue = defaultValue;
+    this.comment = comment;
   }
 }
 
@@ -110,7 +114,14 @@ class Entry {
  * @returns {Array} An array containing entry objects.
  */
 const parseVarFromType = envSpecAsArray => {
-  return (envSpecAsArrayParsed = envSpecAsArray.map(element => {
+  const commentRegexp = /#(.+)$/;
+
+  return envSpecAsArray.filter(line => !line.startsWith("#")).map(element => {
+    //in case of existing comment ignore what's after the "#" symbol
+    const commentMatch = element.match(commentRegexp);
+    const comment = commentMatch ? commentMatch[1].trim() : null;
+    element = commentMatch ? element.split("#")[0] : element;
+
     //in case of typed variable or given restricted choices
     if (element.includes(":")) {
       element = element.split(":");
@@ -121,17 +132,24 @@ const parseVarFromType = envSpecAsArray => {
           element[0].trim(),
           element[1][0].trim(),
           null,
-          element[1][1].trim()
+          element[1][1].trim(),
+          comment
         );
       }
       //else if there is just a type
-      return new Entry(element[0].trim(), element[1].trim(), null, null);
+      return new Entry(
+        element[0].trim(),
+        element[1].trim(),
+        null,
+        null,
+        comment
+      );
     }
     //in case of untyped variable , give default type
     else {
-      return new Entry(element.trim(), "text", null, null);
+      return new Entry(element.trim(), "text", null, null, comment);
     }
-  }));
+  });
 };
 
 /** @function renderLabelForEntry
@@ -164,7 +182,6 @@ const outputHTML = envSpecEntriesArray => {
           toPrint += ` value="${element.defaultValue}"`;
         }
         toPrint += ` />\n`;
-        return toPrint;
       } else if (element.choices) {
         //if element is value with restricted choices
         toPrint += `<select id="env_spec_${element.name.toLowerCase()}" name="${element.name.toLowerCase()}">\n`;
@@ -181,9 +198,12 @@ const outputHTML = envSpecEntriesArray => {
           }
         }
         toPrint += `</select>\n`;
-
-        return toPrint;
       }
+      //in case of existing comment add it to toPrint value
+      if (element.comment) {
+        toPrint = toPrint + `<small>${element.comment}</small>\n`;
+      }
+      return toPrint;
     });
     //return as string value
     return envSpecEntriesToPrint.join("");

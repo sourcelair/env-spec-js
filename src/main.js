@@ -92,18 +92,18 @@ const checkValidationOfValues = envSpecString => {
  */
 class Entry {
   /**
-   * @param {string} envName environmental variable e.g. DATABASE_URL
-   *@param {string|null} envType type of variable e.g. url
-   *@param {Array|null} envChoices given restricted choices e.g. [data,info,1]
-   *@param {string|null} envDefaultVal given default value e.g. data
-   *@param {string} envComment given comment using the # symbol
+   * @param {string} name environmental variable e.g. DATABASE_URL
+   *@param {string|null} type type of variable e.g. url
+   *@param {Array|null} choices given restricted choices e.g. [data,info,1]
+   *@param {string|null} defaultVal given default value e.g. data
+   *@param {string} comment given comment using the # symbol
    */
-  constructor(envName, envType, envChoices, envDefaultVal, envComment) {
-    this.name = envName;
-    this.type = envType;
-    this.choices = envChoices;
-    this.defaultValue = envDefaultVal;
-    this.comment = envComment;
+  constructor(name, type, choices, defaultVal, comment) {
+    this.name = name;
+    this.type = type;
+    this.choices = choices;
+    this.defaultValue = defaultVal;
+    this.comment = comment.trim();
   }
 }
 
@@ -114,44 +114,45 @@ class Entry {
  * @returns {Array} An array containing entry objects.
  */
 const parseVarFromType = envSpecAsArray => {
-  return (envSpecAsArrayParsed = envSpecAsArray
-    .map(element => {
-      comment = "";
-      //in case of existing comment ignore what's after the "#" symbol
-      if (element.includes("#")) {
-        separatedComFromElem = element.split("#");
-        element = separatedComFromElem[0];
-        comment = separatedComFromElem[1];
-      }
-      //in case of typed variable or given restricted choices
-      if (element.includes(":")) {
-        element = element.split(":");
-        //if there is a default value indicated by an existing "="
-        if (element[1].includes("=")) {
-          element[1] = element[1].split("=");
-          return new Entry(
-            element[0].trim(),
-            element[1][0].trim(),
-            null,
-            element[1][1].trim(),
-            comment
-          );
-        }
-        //else if there is just a type
+  //in case a line started with "#" we would have a blank environmental variable
+  envSpecAsArray = envSpecAsArray.filter(line => line[0] !== "#");
+
+  return envSpecAsArray.map(element => {
+    comment = "";
+    //in case of existing comment ignore what's after the "#" symbol
+    if (element.includes("#")) {
+      separatedComFromElem = element.split("#");
+      element = separatedComFromElem[0];
+      comment = separatedComFromElem[1];
+    }
+    //in case of typed variable or given restricted choices
+    if (element.includes(":")) {
+      element = element.split(":");
+      //if there is a default value indicated by an existing "="
+      if (element[1].includes("=")) {
+        element[1] = element[1].split("=");
         return new Entry(
           element[0].trim(),
-          element[1].trim(),
+          element[1][0].trim(),
           null,
-          null,
+          element[1][1].trim(),
           comment
         );
       }
-      //in case of untyped variable , give default type
-      else {
-        return new Entry(element.trim(), "text", null, null, comment);
-      }
-    })
-    .filter(element => element.name !== "")); //in case a line started with "#" we would have a blank environmental variable
+      //else if there is just a type
+      return new Entry(
+        element[0].trim(),
+        element[1].trim(),
+        null,
+        null,
+        comment
+      );
+    }
+    //in case of untyped variable , give default type
+    else {
+      return new Entry(element.trim(), "text", null, null, comment);
+    }
+  });
 };
 
 /** @function renderLabelForEntry

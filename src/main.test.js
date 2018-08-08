@@ -46,13 +46,14 @@ test("Valid input with comment,middle of line", () => {
   const testEnv = "DATABASE_URL: email = test@mail.com #comment";
   expect(envSpecToHTML(testEnv)).toEqual(
     `<label for="env_spec_database_url">DATABASE_URL</label>\n` +
-      `<input id="env_spec_database_url" name="database_url" type="email" value="test@mail.com" />\n`+
+      `<input id="env_spec_database_url" name="database_url" type="email" value="test@mail.com" />\n` +
       `<small>comment</small>\n`
   );
 });
 
 test("Valid input with comment, start of line", () => {
-  const testEnv = "#DATABASE_URL: email = test@mail.com\nDATABASE_URL: email = test@mail.com";
+  const testEnv =
+    "#DATABASE_URL: email = test@mail.com\nDATABASE_URL: email = test@mail.com";
   expect(envSpecToHTML(testEnv)).toEqual(
     `<label for="env_spec_database_url">DATABASE_URL</label>\n` +
       `<input id="env_spec_database_url" name="database_url" type="email" value="test@mail.com" />\n`

@@ -96,53 +96,61 @@ class Entry {
    *@param {string|null} envDefaultVal given default value e.g. data
    *@param {string} envComment given comment using the # symbol
    */
-   constructor(envName, envType, envChoices, envDefaultVal, envComment) {
-     this.name = envName;
-     this.type = envType;
-     this.choices = envChoices;
-     this.defaultValue = envDefaultVal;
-     this.comment = envComment;
-   }
- }
+  constructor(envName, envType, envChoices, envDefaultVal, envComment) {
+    this.name = envName;
+    this.type = envType;
+    this.choices = envChoices;
+    this.defaultValue = envDefaultVal;
+    this.comment = envComment;
+  }
+}
 
- /** @function parseVarFromType
-  * @summary Separates the variables' name from their types, their restricted choices and their default values and returns them as an array of {@link Entry} objects.
-  * @desc Parses each line according to existing symbols such as : or = and create an entry object for each line.If a feature do not exist,its field will be null.
-  * @param {Array} envSpecAsArray  array with the slpitted lines of the .env file based on the \n symbol
-  * @returns {Array} An array containing entry objects.
-  */
- const parseVarFromType = envSpecAsArray => {
-   return (envSpecAsArrayParsed = envSpecAsArray.map(element => {
-     comment = '';
-     //in case of existing comment ignore what's after the "#" symbol
-     if (element.includes("#")){
-       separatedComFromElem = element.split("#");
-       element = separatedComFromElem[0];
-       comment = separatedComFromElem[1];
-     }
-     //in case of typed variable or given restricted choices
-     if (element.includes(":")) {
-       element = element.split(":");
-       //if there is a default value indicated by an existing "="
-       if (element[1].includes("=")) {
-         element[1] = element[1].split("=");
-         return new Entry(
-           element[0].trim(),
-           element[1][0].trim(),
-           null,
-           element[1][1].trim(),
-           comment
-         );
-       }
-       //else if there is just a type
-       return new Entry(element[0].trim(), element[1].trim(), null, null,comment);
-     }
-     //in case of untyped variable , give default type
-     else {
-       return new Entry(element.trim(), "text", null, null,comment);
-     }
-   }).filter(element => element.name !== '')); //in case a line started with "#" we would have a blank environmental variable
- };
+/** @function parseVarFromType
+ * @summary Separates the variables' name from their types, their restricted choices and their default values and returns them as an array of {@link Entry} objects.
+ * @desc Parses each line according to existing symbols such as : or = and create an entry object for each line.If a feature do not exist,its field will be null.
+ * @param {Array} envSpecAsArray  array with the slpitted lines of the .env file based on the \n symbol
+ * @returns {Array} An array containing entry objects.
+ */
+const parseVarFromType = envSpecAsArray => {
+  return (envSpecAsArrayParsed = envSpecAsArray
+    .map(element => {
+      comment = "";
+      //in case of existing comment ignore what's after the "#" symbol
+      if (element.includes("#")) {
+        separatedComFromElem = element.split("#");
+        element = separatedComFromElem[0];
+        comment = separatedComFromElem[1];
+      }
+      //in case of typed variable or given restricted choices
+      if (element.includes(":")) {
+        element = element.split(":");
+        //if there is a default value indicated by an existing "="
+        if (element[1].includes("=")) {
+          element[1] = element[1].split("=");
+          return new Entry(
+            element[0].trim(),
+            element[1][0].trim(),
+            null,
+            element[1][1].trim(),
+            comment
+          );
+        }
+        //else if there is just a type
+        return new Entry(
+          element[0].trim(),
+          element[1].trim(),
+          null,
+          null,
+          comment
+        );
+      }
+      //in case of untyped variable , give default type
+      else {
+        return new Entry(element.trim(), "text", null, null, comment);
+      }
+    })
+    .filter(element => element.name !== "")); //in case a line started with "#" we would have a blank environmental variable
+};
 
 /** @function renderLabelForEntry
  * @desc Creates the render for the {@link outputHTML} function.
@@ -192,8 +200,8 @@ const outputHTML = envSpecEntriesArray => {
         toPrint += `</select>\n`;
       }
       //in case of existing comment add it to toPrint value
-      if(element.comment !== '' ){
-        toPrint = toPrint +`<small>${element.comment}</small>\n`
+      if (element.comment !== "") {
+        toPrint = toPrint + `<small>${element.comment}</small>\n`;
       }
       return toPrint;
     });
@@ -212,6 +220,5 @@ const outputHTML = envSpecEntriesArray => {
 const envSpecToHTML = envSpec => {
   return outputHTML(checkValidationOfValues(envSpec));
 };
-
 
 module.exports = envSpecToHTML;

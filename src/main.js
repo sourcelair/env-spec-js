@@ -95,15 +95,15 @@ class Entry {
    * @param {string} name environmental variable e.g. DATABASE_URL
    *@param {string|null} type type of variable e.g. url
    *@param {Array|null} choices given restricted choices e.g. [data,info,1]
-   *@param {string|null} defaultVal given default value e.g. data
+   *@param {string|null} defaultValue given default value e.g. data
    *@param {string} comment given comment using the # symbol
    */
-  constructor(name, type, choices, defaultVal, comment) {
+  constructor(name, type, choices, defaultValue, comment) {
     this.name = name;
     this.type = type;
     this.choices = choices;
-    this.defaultValue = defaultVal;
-    this.comment = comment.trim();
+    this.defaultValue = defaultValue;
+    this.comment = comment;
   }
 }
 
@@ -114,17 +114,14 @@ class Entry {
  * @returns {Array} An array containing entry objects.
  */
 const parseVarFromType = envSpecAsArray => {
-  //in case a line started with "#" we would have a blank environmental variable
-  envSpecAsArray = envSpecAsArray.filter(line => line[0] !== "#");
+  const commentRegexp = /#(.+)$/;
 
-  return envSpecAsArray.map(element => {
-    comment = "";
+  return envSpecAsArray.filter(line => !line.startsWith("#")).map(element => {
     //in case of existing comment ignore what's after the "#" symbol
-    if (element.includes("#")) {
-      separatedComFromElem = element.split("#");
-      element = separatedComFromElem[0];
-      comment = separatedComFromElem[1];
-    }
+    const commentMatch = element.match(commentRegexp);
+    const comment = commentMatch ? commentMatch[1].trim() : null;
+    element = commentMatch ? element.split("#")[0] : element;
+
     //in case of typed variable or given restricted choices
     if (element.includes(":")) {
       element = element.split(":");
@@ -203,7 +200,7 @@ const outputHTML = envSpecEntriesArray => {
         toPrint += `</select>\n`;
       }
       //in case of existing comment add it to toPrint value
-      if (element.comment !== "") {
+      if (element.comment) {
         toPrint = toPrint + `<small>${element.comment}</small>\n`;
       }
       return toPrint;

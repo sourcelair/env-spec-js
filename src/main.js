@@ -105,6 +105,19 @@ class Entry {
     this.defaultValue = defaultValue;
     this.comment = comment;
   }
+
+  html(){
+    return outputHTML([this]);
+  }
+}
+
+class EntryList {
+  constructor(entries) {
+    this.entries = entries;
+  }
+  html(){
+    return outputHTML(this.entries)
+  }
 }
 
 /** @function parseVarFromType
@@ -212,13 +225,35 @@ const outputHTML = envSpecEntriesArray => {
   return "Error:Wrong Syntax";
 };
 
+
+
+
 /** @function envSpecToHTML
  * @desc gives final output using {@link outputHTML} and {@link checkValidationOfValues}
  * @param {string} envSpec the .env file given in string format
  * @returns {string} HTML code
  */
 const envSpecToHTML = envSpec => {
-  return outputHTML(checkValidationOfValues(envSpec));
+  //!!after the parsed promise  we render the entries
+  return final = parse(envSpec).then(function(entries){
+     console.log(entries.html());
+     return entries.html()}).catch(e => {
+       console.log(e);
+     });
+     //!!does not return the result , it seems that the promise is pending but the html is already written
 };
 
+const parse = envSpecTxt => {
+  //returns promise ,when resolved returns EntryList OBJECT
+  return (promiseForParsing = new Promise(function(resolve, reject) {
+    entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
+    if (entriesList.entries) {
+      resolve(entriesList);
+    } else {
+      reject(new Error("Syntax error"));
+    }
+  }));
+};
+
+console.log(envSpecToHTML("DATA"));
 module.exports = envSpecToHTML;

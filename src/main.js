@@ -255,12 +255,11 @@ const envSpecToHTML = envSpec => {
       return entries.html();
     })
     .then(function(text) {
-      return text;
+      const out = text;
     })
     .catch(e => {
       return e;
     });
-
   //problem!!! tests do not run because we return a promise and they expext a string
 };
 

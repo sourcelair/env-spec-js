@@ -106,8 +106,16 @@ class Entry {
     this.comment = comment;
   }
 
-  html(){
-    return outputHTML([this]);
+  html() {
+    const thisEntry = this;
+    let promiseEntry = null;
+    return (promiseEntry = new Promise(function(resolve, reject) {
+      if (thisEntry) {
+        resolve(outputHTML(thisEntry));
+      } else {
+        reject("Error:Wrong Syntax");
+      }
+    }));
   }
 }
 
@@ -115,8 +123,18 @@ class EntryList {
   constructor(entries) {
     this.entries = entries;
   }
-  html(){
-    return outputHTML(this.entries)
+
+  html() {
+    //returns promise which resolves to the html output that we want
+    const thisEntries = this.entries;
+    let promiseEntries = null;
+    return (promiseEntries = new Promise(function(resolve, reject) {
+      if (thisEntries) {
+        resolve(outputHTML(thisEntries));
+      } else {
+        reject("Error:Wrong Syntax");
+      }
+    }));
   }
 }
 
@@ -222,11 +240,8 @@ const outputHTML = envSpecEntriesArray => {
     return envSpecEntriesToPrint.join("");
   }
   //in case of syntax error , print HTML format
-  return "Error:Wrong Syntax";
+  //return "Error:Wrong Syntax";
 };
-
-
-
 
 /** @function envSpecToHTML
  * @desc gives final output using {@link outputHTML} and {@link checkValidationOfValues}
@@ -234,13 +249,19 @@ const outputHTML = envSpecEntriesArray => {
  * @returns {string} HTML code
  */
 const envSpecToHTML = envSpec => {
-  //!!after the parsed promise  we render the entries
-  return final = parse(envSpec).then(function(entries){
-     console.log(entries.html());
-     return entries.html()}).catch(e => {
-       console.log(e);
-     });
-     //!!does not return the result , it seems that the promise is pending but the html is already written
+  //returns promise ,when resolved returns the html output, in case of rejection returns an error message
+  return parse(envSpec)
+    .then(function(entries) {
+      return entries.html();
+    })
+    .then(function(text) {
+      return text;
+    })
+    .catch(e => {
+      return e;
+    });
+
+  //problem!!! tests do not run because we return a promise and they expext a string
 };
 
 const parse = envSpecTxt => {
@@ -250,10 +271,9 @@ const parse = envSpecTxt => {
     if (entriesList.entries) {
       resolve(entriesList);
     } else {
-      reject(new Error("Syntax error"));
+      reject("Error:Wrong Syntax");
     }
   }));
 };
 
-console.log(envSpecToHTML("DATA"));
 module.exports = envSpecToHTML;

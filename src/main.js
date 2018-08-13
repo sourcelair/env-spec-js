@@ -98,6 +98,7 @@ class Entry {
    *@param {string|null} defaultValue given default value e.g. data
    *@param {string} comment given comment using the # symbol
    */
+
   constructor(name, type, choices, defaultValue, comment) {
     this.name = name;
     this.type = type;
@@ -106,6 +107,10 @@ class Entry {
     this.comment = comment;
   }
 
+  /** @method html
+   * @summary Returns the rendered HTML for the given entry
+   * @returns {promise} that resolves to string
+   */
   html() {
     const thisEntry = this;
     let promiseEntry = null;
@@ -119,13 +124,23 @@ class Entry {
   }
 }
 
+/**
+ * Class representing an array of entry objects
+ * @class
+ */
 class EntryList {
+  /**
+   * @param {Array} entries includes {@link Entry} objects
+   */
   constructor(entries) {
     this.entries = entries;
   }
 
+  /** @method html
+   * @summary Returns the rendered HTML for the given array of entries
+   * @returns {promise} that resolves to string
+   */
   html() {
-    //returns promise which resolves to the html output that we want
     const thisEntries = this.entries;
     let promiseEntries = null;
     return (promiseEntries = new Promise(function(resolve, reject) {
@@ -244,12 +259,11 @@ const outputHTML = envSpecEntriesArray => {
 };
 
 /** @function envSpecToHTML
- * @desc gives final output using {@link outputHTML} and {@link checkValidationOfValues}
+ * @desc gives final output using {@link parse} , {@link outputHTML} and {@link checkValidationOfValues}
  * @param {string} envSpec the .env file given in string format
- * @returns {string} HTML code
+ * @returns {promise} that resolves to string
  */
 const envSpecToHTML = envSpec => {
-  //returns promise ,when resolved returns the html output, in case of rejection returns an error message
   return parse(envSpec)
     .then(function(entries) {
       return entries.html();
@@ -260,9 +274,13 @@ const envSpecToHTML = envSpec => {
     .catch(e => {
       return e;
     });
-  //problem!!! tests do not run because we return a promise and they expext a string
 };
 
+/** @function parse
+ * @desc transforms .env file to an array of valid values or an error message
+ * @param {string} envSpec the .env file given in string format
+ * @returns {promise} that resolves to an array of entry objets
+ */
 const parse = envSpecTxt => {
   //returns promise ,when resolved returns EntryList OBJECT
   return (promiseForParsing = new Promise(function(resolve, reject) {

@@ -269,7 +269,7 @@ const envSpecToHTML = envSpec => {
       return entries.html();
     })
     .then(function(text) {
-      const out = text;
+      return text;
     })
     .catch(e => {
       return e;

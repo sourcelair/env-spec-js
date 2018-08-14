@@ -139,8 +139,8 @@ class EntryList {
    * @returns {promise} that resolves to string
    */
   html() {
-    return new Promise.all(this.entries.map(entry => entry.html())).then(
-      values => resolve(values.join("\n"))
+    return Promise.all(this.entries.map(entry => entry.html())).then(values =>
+      resolve(values.join("\n"))
     );
   }
 }
@@ -250,24 +250,6 @@ const outputHTML = envSpecEntriesArray => {
   //return "Error:Wrong Syntax";
 };
 
-/** @function envSpecToHTML
- * @desc gives final output using {@link parse} , {@link outputHTML} and {@link checkValidationOfValues}
- * @param {string} envSpec the .env file given in string format
- * @returns {promise} that resolves to string
- */
-const envSpecToHTML = envSpec => {
-  return parse(envSpec)
-    .then(function(entries) {
-      return entries.html();
-    })
-    .then(function(text) {
-      return text;
-    })
-    .catch(e => {
-      return e;
-    });
-};
-
 /** @function parse
  * @desc transforms .env file to an array of valid values or an error message
  * @param {string} envSpec the .env file given in string format
@@ -282,7 +264,13 @@ const parse = envSpecTxt => {
     } else {
       reject("Error:Wrong Syntax");
     }
-  }));
+  })
+    .then(function(entries) {
+      return entries.html();
+    })
+    .catch(e => {
+      return e;
+    }));
 };
 
-module.exports = envSpecToHTML;
+module.exports.parse = parse;

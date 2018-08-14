@@ -112,15 +112,13 @@ class Entry {
    * @returns {promise} that resolves to string
    */
   html() {
-    const thisEntry = this;
-    let promiseEntry = null;
-    return (promiseEntry = new Promise(function(resolve, reject) {
-      if (thisEntry) {
-        resolve(outputHTML(thisEntry));
+    return new Promise(function(resolve, reject) {
+      if (this) {
+        resolve(outputHTML(this));
       } else {
         reject("Error:Wrong Syntax");
       }
-    }));
+    });
   }
 }
 
@@ -141,15 +139,9 @@ class EntryList {
    * @returns {promise} that resolves to string
    */
   html() {
-    const thisEntries = this.entries;
-    let promiseEntries = null;
-    return (promiseEntries = new Promise(function(resolve, reject) {
-      if (thisEntries) {
-        resolve(outputHTML(thisEntries));
-      } else {
-        reject("Error:Wrong Syntax");
-      }
-    }));
+    return new Promise.all(this.entries.map(entry => entry.html())).then(
+      values => resolve(values.join("\n"))
+    );
   }
 }
 
@@ -254,7 +246,7 @@ const outputHTML = envSpecEntriesArray => {
     //return as string value
     return envSpecEntriesToPrint.join("");
   }
-  //in case of syntax error , print HTML format
+  //in case of syntax error ,
   //return "Error:Wrong Syntax";
 };
 

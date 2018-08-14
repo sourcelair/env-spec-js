@@ -112,11 +112,10 @@ class Entry {
    * @returns {promise} that resolves to string
    */
   html() {
+    const entry = [this];
     return new Promise(function(resolve, reject) {
-      console.log("IN EnTRY HTML() entry is " );
-      console.log(this);
-      if (this) {
-        resolve(outputHTML(this));
+      if (entry) {
+        resolve(outputHTML(entry));
       } else {
         reject("Error:Wrong Syntax");
       }
@@ -141,17 +140,12 @@ class EntryList {
    * @returns {promise} that resolves to string
    */
   html() {
-    console.log("IN ENTRY LIST HTML() this.entries is  ");
-    console.log(this.entries);
-    const entriesHTMLPromises = (this.entries).map(entry => entry.html());
-    console.log("IN ENTRY LIST HTML () AFTER MAP for entriesHTMLPromises IS DONE\n\n");
-    return new Promise(function(resolve,reject){
-      Promise.all(entriesHTMLPromises).then(
-        values => resolve(values.join('\n'))
-      ).catch(
-        error =>reject(error)
-      );
-    })
+    const entriesHTMLPromises = this.entries.map(entry => entry.html());
+    return new Promise(function(resolve, reject) {
+      Promise.all(entriesHTMLPromises)
+        .then(values => resolve(values.join("")))
+        .catch(error => reject(error));
+    });
   }
 }
 
@@ -275,4 +269,4 @@ const parse = envSpecTxt => {
   });
 };
 
-parse("DATA").then(data=>data.html())
+module.exports.parse = parse;

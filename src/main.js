@@ -98,7 +98,6 @@ class Entry {
    *@param {string|null} defaultValue given default value e.g. data
    *@param {string} comment given comment using the # symbol
    */
-
   constructor(name, type, choices, defaultValue, comment) {
     this.name = name;
     this.type = type;
@@ -112,10 +111,10 @@ class Entry {
    * @returns {promise} that resolves to string
    */
   html() {
-    const entry = [this];
+    const entry = outputHTML([this]);
     return new Promise(function(resolve, reject) {
       if (entry) {
-        resolve(outputHTML(entry));
+        resolve(entry);
       } else {
         reject("Error:Wrong Syntax");
       }
@@ -260,7 +259,7 @@ const outputHTML = envSpecEntriesArray => {
 const parse = envSpecTxt => {
   //returns promise ,when resolved returns EntryList OBJECT
   return new Promise(function(resolve, reject) {
-    entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
+    const entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
     if (entriesList.entries) {
       resolve(entriesList);
     } else {

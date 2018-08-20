@@ -105,6 +105,47 @@ class Entry {
     this.defaultValue = defaultValue;
     this.comment = comment;
   }
+
+  /** @method html
+   * @summary Returns the rendered HTML for the given entry
+   * @returns {promise} that resolves to string
+   */
+  html() {
+    const entry = outputHTML([this]);
+    return new Promise(function(resolve, reject) {
+      if (entry) {
+        resolve(entry);
+      } else {
+        reject("Error:Wrong Syntax");
+      }
+    });
+  }
+}
+
+/**
+ * Class representing an array of entry objects
+ * @class
+ */
+class EntryList {
+  /**
+   * @param {Array} entries includes {@link Entry} objects
+   */
+  constructor(entries) {
+    this.entries = entries;
+  }
+
+  /** @method html
+   * @summary Returns the rendered HTML for the given array of entries
+   * @returns {promise} that resolves to string
+   */
+  html() {
+    const entriesHTMLPromises = this.entries.map(entry => entry.html());
+    return new Promise(function(resolve, reject) {
+      Promise.all(entriesHTMLPromises)
+        .then(values => resolve(values.join("")))
+        .catch(error => reject(error));
+    });
+  }
 }
 
 /** @function parseVarFromType
@@ -208,17 +249,23 @@ const outputHTML = envSpecEntriesArray => {
     //return as string value
     return envSpecEntriesToPrint.join("");
   }
-  //in case of syntax error , print HTML format
-  return "Error:Wrong Syntax";
 };
 
-/** @function envSpecToHTML
- * @desc gives final output using {@link outputHTML} and {@link checkValidationOfValues}
+/** @function parse
+ * @desc transforms .env file to an array of valid values or an error message
  * @param {string} envSpec the .env file given in string format
- * @returns {string} HTML code
+ * @returns {promise} that resolves to an array of entry objets
  */
-const envSpecToHTML = envSpec => {
-  return outputHTML(checkValidationOfValues(envSpec));
+const parse = envSpecTxt => {
+  //returns promise ,when resolved returns EntryList OBJECT
+  return new Promise(function(resolve, reject) {
+    const entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
+    if (entriesList.entries) {
+      resolve(entriesList);
+    } else {
+      reject("Error:Wrong Syntax");
+    }
+  });
 };
 
-module.exports = envSpecToHTML;
+module.exports.parse = parse;

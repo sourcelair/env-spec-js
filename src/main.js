@@ -26,7 +26,6 @@ const checkValidationOfValues = envSpecString => {
   const genericForCheckingRestrChoicesSyntax = /^\[(.*)\]$/;
 
   let envSpecLines = parseVarFromType(envSpecString.trim().split("\n")); //split lines based on \n character and parse them
-  let checkValidation = true;
   //envSpecEntries is an array containing entries with their and type or choices
   //element.name is the variable e.g. ADMIN_EMAIL
   //element.type is the type e.g. test or null
@@ -35,21 +34,29 @@ const checkValidationOfValues = envSpecString => {
   envSpecEntries = envSpecLines.map(element => {
     if (element.defaultValue === "") {
       //this would happen in case input is "DATA: number = " or "DATA :[4,2] = "
-      checkValidation = false;
+      throw new syntaxError("missing default value", element.name);
+    } else if (!element.name.match(alphanumericThatDoesNotStartWithDigit)) {
+      throw new syntaxError(
+        "wrong variable name (must be alphanumericThatDoesNotStartWithDigit)",
+        element.name
+      );
+    } else if (
+      !validTypes.includes(element.type) &&
+      !element.type.match(genericForCheckingRestrChoicesSyntax)
+    ) {
+      throw new syntaxError("invalid variable type ", element.name);
     } else {
       if (
         //in case environmental variable is valid and entry has a valid type
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        validTypes.includes(element.type) &&
-        checkValidation === true
+        validTypes.includes(element.type)
       ) {
         return element;
       }
       //in case environmental variable is valid and entry has restricted choices (indicated by "[]" ,we should split them
       else if (
         element.name.match(alphanumericThatDoesNotStartWithDigit) &&
-        element.type.match(genericForCheckingRestrChoicesSyntax) &&
-        checkValidation === true
+        element.type.match(genericForCheckingRestrChoicesSyntax)
       ) {
         element.choices = element.type
           .match(genericForCheckingRestrChoicesSyntax)[1]
@@ -57,7 +64,7 @@ const checkValidationOfValues = envSpecString => {
         element.choices = element.choices.map(choice => {
           if (choice.trim() === "") {
             //check for wrong syntax "DATA: [1, ]"
-            checkValidation = false;
+            throw new syntaxError("missing restricted choice", element.name);
           }
           return choice.trim(); //trim valid choices
         });
@@ -67,25 +74,30 @@ const checkValidationOfValues = envSpecString => {
           element.defaultValue &&
           !element.choices.includes(element.defaultValue)
         ) {
-          checkValidation = false;
+          throw new syntaxError(
+            "default value is not included in restricted choices",
+            element.name
+          );
         }
         return element;
       }
       //in case of a syntax error in any cases of the above
       else {
-        checkValidation = false;
+        throw new syntaxError(" ", element.name);
       }
     }
   });
 
-  //in case of one or more invalid variables or types, return error
-  if (checkValidation === true) {
-    return envSpecEntries;
-  } else {
-    return null;
-  }
+  //in case all variables were valid return array of entry objects
+  return envSpecEntries;
 };
 
+class syntaxError extends Error {
+  constructor(message, environmentalVar) {
+    super("SyntaxError: " + message);
+    this.nameOfVar = environmentalVar;
+  }
+}
 /**
  * Class representing an Entry
  * @class
@@ -259,11 +271,11 @@ const outputHTML = envSpecEntriesArray => {
 const parse = envSpecTxt => {
   //returns promise ,when resolved returns EntryList OBJECT
   return new Promise(function(resolve, reject) {
-    const entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
-    if (entriesList.entries) {
+    try {
+      const entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
       resolve(entriesList);
-    } else {
-      reject("Error:Wrong Syntax");
+    } catch (error) {
+      reject(error.message);
     }
   });
 };

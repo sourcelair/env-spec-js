@@ -65,28 +65,28 @@ test("Valid input with comment, start of line", () => {
 test("Invalid environmental variable : starts with number", () => {
   const testEnv = "1DATABASE_URL\nADMIN_EMAIL:email";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: wrong variable name (must be alphanumericThatDoesNotStartWithDigit)"
   );
 });
 
 test("Invalid environmental variable : contains non alphanumeric characters", () => {
   const testEnv = "DATABASE_URLαα\nADMIN_EMAIL:email";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: wrong variable name (must be alphanumericThatDoesNotStartWithDigit)"
   );
 });
 
 test("Invalid environmental variable : contains lowercase letters", () => {
   const testEnv = "database_url\nADMIN_EMAIL:email";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: wrong variable name (must be alphanumericThatDoesNotStartWithDigit)"
   );
 });
 
 test("Invalid type", () => {
   const testEnv = "\nADMIN_EMAIL: notgood";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: invalid variable type "
   );
 });
 
@@ -103,41 +103,41 @@ test("Untyped environmental variable", () => {
 test("Multiple invalid variables and types", () => {
   const testEnv = "DATABASE_URLαα: αα\nADMIN_EMAIL:\n1DEBUG";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: wrong variable name (must be alphanumericThatDoesNotStartWithDigit)"
   );
 });
 
 test("Wrong Syntax for restricted choices", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA:[0,";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: invalid variable type "
   );
 });
 
 test("Wrong Syntax for restricted choices2", () => {
   const testEnv = "DEBUG: [0, ]";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: missing restricted choice"
   );
 });
 
 test("Wrong Syntax for default value for type", () => {
   const testEnv = "DATABASE_URL\nADMIN_EMAIL:email\nDATA: text dasdsa";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: invalid variable type "
   );
 });
 
 test("Wrong Syntax for default value for type", () => {
   const testEnv = "DEBUG: [0, 1]=4";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: default value is not included in restricted choices"
   );
 });
 
 test("Wrong Syntax for default value,missing value", () => {
   const testEnv = "DEBUG: [0, 1]=";
   expect(envSpec.parse(testEnv).then(data => data.html())).rejects.toEqual(
-    "Error:Wrong Syntax"
+    "SyntaxError: missing default value"
   );
 });

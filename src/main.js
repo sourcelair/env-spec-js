@@ -36,7 +36,7 @@ const checkValidationOfValues = envSpecString => {
     if (element.defaultValue === "") {
       //this would happen in case input is "DATA: number = " or "DATA :[4,2] = "
       throw new EnvSpecSyntaxError(
-        'Expected default value after "="',
+        "Expected default value after =",
         element.name
       );
     } else if (!element.name.match(alphanumericThatDoesNotStartWithDigit)) {
@@ -294,9 +294,10 @@ const parse = envSpecTxt => {
       const entriesList = new EntryList(checkValidationOfValues(envSpecTxt));
       resolve(entriesList);
     } catch (error) {
-      reject(error.message);
+      reject(error);
     }
   });
 };
 
+module.exports.EnvSpecSyntaxError = EnvSpecSyntaxError;
 module.exports.parse = parse;

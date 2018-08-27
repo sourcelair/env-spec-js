@@ -23,8 +23,8 @@ const checkValidationOfValues = envSpecString => {
     "week"
   ];
   const alphanumericThatDoesNotStartWithDigit = /^[A-Z_][0-9A-Z_]*$/;
-  const genericForCheckingRestrChoicesSyntax = /^\[(.*)\]$/;
-  const allowedTypes = validTypes.join(",");
+  const genericForCheckingRestrChoicesSyntax = /^\[(.*)\]$/;\
+  const allowedTypes = validTypes.map(validType => `"${validType}"`).join(",");
 
   let envSpecLines = parseVarFromType(envSpecString.trim().split("\n")); //split lines based on \n character and parse them
   //envSpecEntries is an array containing entries with their and type or choices

@@ -98,7 +98,7 @@ test("Invalid type", () => {
     envSpec.parse(testEnv).then(data => data.html())
   ).rejects.toMatchObject({
     message:
-      'EnvSpecSyntaxError: Invalid variable type; it should be one of (color,date,datetime-local,email,month,number,password,tel,text,time,url,week) and "=" if there is a default value'
+      'EnvSpecSyntaxError: Invalid variable type; it should be one of ("color","date","datetime-local","email","month","number","password","tel","text","time","url","week") and "=" if there is a default value'
   });
 });
 
@@ -128,7 +128,7 @@ test("Wrong Syntax for restricted choices", () => {
     envSpec.parse(testEnv).then(data => data.html())
   ).rejects.toMatchObject({
     message:
-      'EnvSpecSyntaxError: Invalid variable type; it should be one of (color,date,datetime-local,email,month,number,password,tel,text,time,url,week) and "=" if there is a default value'
+      'EnvSpecSyntaxError: Invalid variable type; it should be one of ("color","date","datetime-local","email","month","number","password","tel","text","time","url","week") and "=" if there is a default value'
   });
 });
 
@@ -147,7 +147,7 @@ test("Wrong Syntax for default value for type", () => {
     envSpec.parse(testEnv).then(data => data.html())
   ).rejects.toMatchObject({
     message:
-      'EnvSpecSyntaxError: Invalid variable type; it should be one of (color,date,datetime-local,email,month,number,password,tel,text,time,url,week) and "=" if there is a default value'
+      'EnvSpecSyntaxError: Invalid variable type; it should be one of ("color","date","datetime-local","email","month","number","password","tel","text","time","url","week") and "=" if there is a default value'
   });
 });
 

@@ -299,5 +299,10 @@ const parse = envSpecTxt => {
   });
 };
 
+const serializeForm = form => {
+  return new Promise(function(resolve, reject) {
+    resolve("something");
+  });
+};
 module.exports.EnvSpecSyntaxError = EnvSpecSyntaxError;
 module.exports.parse = parse;

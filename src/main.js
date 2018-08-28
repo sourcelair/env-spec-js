@@ -299,10 +299,23 @@ const parse = envSpecTxt => {
   });
 };
 
+/** @function serializeForm
+ * @desc transforms a HTML form to an array of variables with their values if given by user
+ * @param {HTML form} form the form completed by the user
+ * @returns {promise} that resolves to an array of strings
+ */
 const serializeForm = form => {
+  outputForm = [];
+  newEntryForm = "NOTHING IS DONE"
+  form.querySelectorAll('select,input').forEach(input => {
+    newEntryForm = input.value ? `${input.name.toUpperCase()}: ${input.value}` : `${input.name.toUpperCase()}: null`;
+    outputForm.push(newEntryForm);
+  });
   return new Promise(function(resolve, reject) {
-    resolve("something");
+    resolve(outputForm);
   });
 };
+
+module.exports.serializeForm = serializeForm;
 module.exports.EnvSpecSyntaxError = EnvSpecSyntaxError;
 module.exports.parse = parse;

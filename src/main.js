@@ -301,17 +301,13 @@ const parse = envSpecTxt => {
 
 /** @function serializeForm
  * @desc transforms a HTML form to an array of variables with their values if given by user
- * @param {HTML form} form the form completed by the user
+ * @param {HTMLFormElement} form the form completed by the user
  * @returns {promise} that resolves to an array of strings
  */
 const serializeForm = form => {
   outputForm = [];
-  newEntryForm = "NOTHING IS DONE";
   form.querySelectorAll("select,input").forEach(input => {
-    newEntryForm = input.value
-      ? `${input.name.toUpperCase()}: ${input.value}`
-      : `${input.name.toUpperCase()}: null`;
-    outputForm.push(newEntryForm);
+    outputForm.push({ [input.name.toUpperCase()]: input.value || null });
   });
   return new Promise(function(resolve, reject) {
     resolve(outputForm);

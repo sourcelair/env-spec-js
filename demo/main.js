@@ -25,6 +25,6 @@ button2.addEventListener("click", function serializeForm() {
       entries =>
         (document.getElementById(
           "env-spec-form-serialized"
-        ).innerHTML = entries.join("\n").toString())
+        ).innerHTML = JSON.stringify(entries))
     );
 });

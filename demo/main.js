@@ -22,6 +22,9 @@ button2.addEventListener("click", function serializeForm() {
   envSpec
     .serializeForm(form)
     .then(
-      entries => document.getElementById("env-spec-form-serialized").innerHTML = entries.join("\n").toString()
+      entries =>
+        (document.getElementById(
+          "env-spec-form-serialized"
+        ).innerHTML = entries.join("\n").toString())
     );
 });

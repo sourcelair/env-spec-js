@@ -306,9 +306,11 @@ const parse = envSpecTxt => {
  */
 const serializeForm = form => {
   outputForm = [];
-  newEntryForm = "NOTHING IS DONE"
-  form.querySelectorAll('select,input').forEach(input => {
-    newEntryForm = input.value ? `${input.name.toUpperCase()}: ${input.value}` : `${input.name.toUpperCase()}: null`;
+  newEntryForm = "NOTHING IS DONE";
+  form.querySelectorAll("select,input").forEach(input => {
+    newEntryForm = input.value
+      ? `${input.name.toUpperCase()}: ${input.value}`
+      : `${input.name.toUpperCase()}: null`;
     outputForm.push(newEntryForm);
   });
   return new Promise(function(resolve, reject) {

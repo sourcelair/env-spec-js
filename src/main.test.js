@@ -183,11 +183,33 @@ test("Test for serialization of data", () => {
   ]);
 });
 
-test("Syntax error and serialization", () => {
+test("Test for serialization of data with specific value", () => {
   const myForm = document.createElement("form");
-  myForm.id = "envspecform";
-  myForm.textContent =
-    "EnvSpecSyntaxError: Invalid variable name; it should contain only latin alphanumeric characters, underscores and not start with a digit.";
+  const aLabel = document.createElement("label");
+  const anInput = document.createElement("input");
+  anInput.type = "text";
+  anInput.name = "data";
+  anInput.id = "env_spec_data";
+  anInput.value = "test";
+  myForm.appendChild(anInput);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([
+    { DATA: "test" }
+  ]);
+});
 
-  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([]);
+test("Test for serialization of data with restricted choices", () => {
+  const myForm = document.createElement("form");
+  const aLabel = document.createElement("label");
+  const aSelect = document.createElement("select");
+  aSelect.id = "env_spec_data";
+  aSelect.name = "data";
+  const anOption = document.createElement("option");
+  anOption.value = "1";
+  const secOption = document.createElement("option");
+  secOption.value = "2";
+  aSelect.appendChild(anOption);
+  aSelect.appendChild(secOption);
+  aSelect.selectedIndex = 1;
+  myForm.appendChild(aSelect);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([{ DATA: "2" }]);
 });

@@ -169,3 +169,25 @@ test("Wrong Syntax for default value,missing value", () => {
     message: "EnvSpecSyntaxError: Expected default value after ="
   });
 });
+
+test("Test for serialization of data", () => {
+  const myForm = document.createElement("form");
+  const aLabel = document.createElement("label");
+  const anInput = document.createElement("input");
+  anInput.type = "text";
+  anInput.name = "data";
+  anInput.id = "env_spec_data";
+  myForm.appendChild(anInput);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([
+    { DATA: null }
+  ]);
+});
+
+test("Syntax error and serialization", () => {
+  const myForm = document.createElement("form");
+  myForm.id = "envspecform";
+  myForm.textContent =
+    "EnvSpecSyntaxError: Invalid variable name; it should contain only latin alphanumeric characters, underscores and not start with a digit.";
+
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([]);
+});

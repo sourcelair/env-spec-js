@@ -299,5 +299,21 @@ const parse = envSpecTxt => {
   });
 };
 
+/** @function serializeForm
+ * @desc transforms a HTML form to an array of variables with their values if given by user
+ * @param {HTMLFormElement} form the form completed by the user
+ * @returns {promise} that resolves to an array of strings
+ */
+const serializeForm = form => {
+  outputForm = [];
+  form.querySelectorAll("select,input").forEach(input => {
+    outputForm.push({ [input.name.toUpperCase()]: input.value || null });
+  });
+  return new Promise(function(resolve, reject) {
+    resolve(outputForm);
+  });
+};
+
+module.exports.serializeForm = serializeForm;
 module.exports.EnvSpecSyntaxError = EnvSpecSyntaxError;
 module.exports.parse = parse;

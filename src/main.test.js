@@ -169,3 +169,47 @@ test("Wrong Syntax for default value,missing value", () => {
     message: "EnvSpecSyntaxError: Expected default value after ="
   });
 });
+
+test("Test for serialization of data", () => {
+  const myForm = document.createElement("form");
+  const aLabel = document.createElement("label");
+  const anInput = document.createElement("input");
+  anInput.type = "text";
+  anInput.name = "data";
+  anInput.id = "env_spec_data";
+  myForm.appendChild(anInput);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([
+    { DATA: null }
+  ]);
+});
+
+test("Test for serialization of data with specific value", () => {
+  const myForm = document.createElement("form");
+  const aLabel = document.createElement("label");
+  const anInput = document.createElement("input");
+  anInput.type = "text";
+  anInput.name = "data";
+  anInput.id = "env_spec_data";
+  anInput.value = "test";
+  myForm.appendChild(anInput);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([
+    { DATA: "test" }
+  ]);
+});
+
+test("Test for serialization of data with restricted choices", () => {
+  const myForm = document.createElement("form");
+  const aLabel = document.createElement("label");
+  const aSelect = document.createElement("select");
+  aSelect.id = "env_spec_data";
+  aSelect.name = "data";
+  const anOption = document.createElement("option");
+  anOption.value = "1";
+  const secOption = document.createElement("option");
+  secOption.value = "2";
+  aSelect.appendChild(anOption);
+  aSelect.appendChild(secOption);
+  aSelect.selectedIndex = 1;
+  myForm.appendChild(aSelect);
+  expect(envSpec.serializeForm(myForm)).resolves.toMatchObject([{ DATA: "2" }]);
+});

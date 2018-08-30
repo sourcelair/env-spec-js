@@ -1,6 +1,6 @@
 {
   "name": "env-spec",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "modify env files to HTML",
   "main": "index.js",
   "repository": "https://github.com/sourcelair/env-spec-js.git",

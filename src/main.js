@@ -99,9 +99,26 @@ const checkValidationOfValues = envSpecString => {
   });
 
   //in case all variables were valid return array of entry objects
+  checkForDoubles(envSpecEntries);
   return envSpecEntries;
 };
 
+/** @method checkForDoubles
+ * @summary Checks if a variable name is appearing twice or more times.
+ * @param {Array} envSpecEntries contains the valid entry objects that we were going to print
+ */
+const checkForDoubles = envSpecEntries => {
+  tempNames = [];
+  envSpecEntries.forEach(element => {
+    if (tempNames.includes(element.name)) {
+      throw new EnvSpecSyntaxError(
+        `Invalid variable name; variable "${element.name}" already exists.`,
+        element.name
+      );
+    }
+    tempNames.push(element.name);
+  });
+};
 /**
  * Class representing a Syntax Error object
  * @class
@@ -314,6 +331,10 @@ const serializeForm = form => {
   });
 };
 
+parse("DATA\nDATA")
+  .then(data => data.html())
+  .then(text => console.log(text))
+  .catch(e => console.log(e.message));
 module.exports.serializeForm = serializeForm;
 module.exports.EnvSpecSyntaxError = EnvSpecSyntaxError;
 module.exports.parse = parse;

@@ -170,6 +170,15 @@ test("Wrong Syntax for default value,missing value", () => {
   });
 });
 
+test("Wrong Syntax for default value,missing value", () => {
+  const testEnv = "DEBUG\nDEBUG";
+  expect(
+    envSpec.parse(testEnv).then(data => data.html())
+  ).rejects.toMatchObject({
+    message: `EnvSpecSyntaxError: Invalid variable name; variable "DEBUG" already exists.`
+  });
+});
+
 test("Test for serialization of data", () => {
   const myForm = document.createElement("form");
   const aLabel = document.createElement("label");

@@ -112,7 +112,7 @@ const checkForDoubles = envSpecEntries => {
   envSpecEntries.forEach(element => {
     if (tempNames.includes(element.name)) {
       throw new EnvSpecSyntaxError(
-        "Invalid variable name , cannot give same name twice",
+        `Invalid variable name; variable "${element.name}" already exists.`,
         element.name
       );
     }

@@ -175,8 +175,7 @@ test("Wrong Syntax for default value,missing value", () => {
   expect(
     envSpec.parse(testEnv).then(data => data.html())
   ).rejects.toMatchObject({
-    message:
-      "EnvSpecSyntaxError: Invalid variable name , cannot give same name twice"
+    message: `EnvSpecSyntaxError: Invalid variable name; variable "DEBUG" already exists.`
   });
 });
 
